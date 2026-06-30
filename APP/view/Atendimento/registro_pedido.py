@@ -1,4 +1,4 @@
-
+from controller.produto import buscar_lote_fefo
 from tkinter import *
 from tkinter import Toplevel, Label, Entry, Button
 from config.DBConnection import *
@@ -89,12 +89,33 @@ def agendamento_entrega():
     Button(janela_agendamento_entrega, text="Finalizar Pedido", command=finalizar_pedido).place(x=180, y=180, width=150, height=30)
 
 def resumo_pedido():
-    # Inplementar a função para abstrair as informações do resumo, nome do cliente, produto, valor, data e hora.
-    # Inplementar a função para abstrair as informações do resumo, nome do cliente, produto, valor, data e hora.
+    # Inplementar a funçãoo para abstrair as informações do resumo, nome do cliente, produto, valor, data e hora.
+    # Inplementar a funçao para abstrair as informações do resumo, nome do cliente, produto, valor, data e hora.
     pass
+
 
 def finalizar_pedido():
-    # Criar um lógica para concluir o pedido no banco de dados
-     
-    pass
 
+    codigo_prod = codigo_prod_entry.get()
+    quantidade = int(quantidade_prod_entry.get())
+
+    lote = buscar_lote_fefo(codigo_prod)
+
+    if not lote:
+        print("Produto sem estoque")
+        return
+
+    if lote.qt_produtoestoque < quantidade:
+        print("Estoque insuficiente")
+        return
+
+    lote.qt_produtoestoque -= quantidade
+
+    session = Session()
+    session.merge(lote)
+    session.commit()
+
+    print(
+        f"Baixa realizada no lote {lote.nr_lote} "
+        f"com validade {lote.dt_validade}"
+    )
