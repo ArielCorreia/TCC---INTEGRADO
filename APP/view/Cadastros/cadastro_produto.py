@@ -64,7 +64,7 @@ def cadastro_produto():
             showinfo("Cadastro de Produto", "Cadastro realizado com sucesso!")
         except IntegrityError:
             session.rollback()
-            showinfo("Cadastro de Produto", "Erro: Ocorreu uma violação de integridade. Verifique os dados inseridos.")
+            showinfo("Cadastro de Produto", "Erro: Verifique os dados inseridos.")
         except Exception as e:
             session.rollback()
             showinfo("Cadastro de Produto", f"Erro inesperado:{str (e)}")
