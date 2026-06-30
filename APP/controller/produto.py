@@ -2,6 +2,7 @@ from flask import session
 from models.produto import Produto
 from models.produto_estoque import Produto_estoque
 
+
 def lista_produtos():
     produtos = Produto.lista_produtos()
     return produtos
@@ -40,3 +41,20 @@ def adiciona_produto_pedido(cd_produto):
 def consulta_produto_por_codigo2(cd_produto):
     produto = session.query(Produto).filter_by(cd_produto=cd_produto).first()
     return produto
+
+
+def buscar_lote_fefo(cd_produto):
+
+    session = Session()
+
+    lote = (
+        session.query(Produto_estoque)
+        .filter(
+            Produto_estoque.cd_produto == cd_produto,
+            Produto_estoque.qt_produtoestoque > 0
+        )
+        .order_by(Produto_estoque.dt_validade.asc())
+        .first()
+    )
+
+    return lote
